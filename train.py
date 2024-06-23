@@ -1,16 +1,23 @@
-# This is a sample Python script.
+import yaml
+from src.data.dataset import load_data
+from src.models.model_factory import get_model_and_tokenizer
+from src.training.trainer import train_model
+from sklearn.model_selection import train_test_split
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    with open('config/config.yaml', 'r') as f:
+        config = yaml.safe_load(f)
 
+    train_df, test_df = load_data(config)
+    train_df, eval_df = train_test_split(train_df, test_size=0.1)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    for model_config in config['models']:
+        model, tokenizer = get_model_and_tokenizer(
+            model_config['name'],
+            model_config['type'],
+            config['training']['num_labels']
+        )
+        train_model(model, tokenizer, train_df, eval_df, config)
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
