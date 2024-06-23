@@ -1,0 +1,11 @@
+# Ignore Python cache directories
+data/__pycache__/
+evaluation/__pycache__/
+models/__pycache__/
+
+# Ignore specific data files
+data/labeled_data.csv
+data/labeled_data_test.csv
+
+# Ignore trained models directory
+trained_models/

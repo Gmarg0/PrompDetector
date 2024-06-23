@@ -3,6 +3,7 @@ import pandas as pd
 import torch
 from models.model_factory import get_model_and_tokenizer
 from evaluation.evaluator import evaluate_model
+from safetensors.torch import load_file
 
 
 def main():
@@ -18,7 +19,10 @@ def main():
             model_config,
             config['training']['num_labels']
         )
-        model.load_state_dict(torch.load(f"./model_{model_config['name']}/pytorch_model.bin"))
+
+        state_dict = load_file(f"./trained_models/{model_config['name']}/model.safetensors")
+        model.load_state_dict(state_dict)
+
         model.to(model.device)
 
         evaluation_results = evaluate_model(model, tokenizer, test_df, config)
@@ -35,7 +39,6 @@ def main():
         print(f"F1 Score: {result['f1_score']:.4f}")
         print(f"Average Inference Time: {result['avg_inference_time']:.4f} seconds")
         print()
-
 
 if __name__ == '__main__':
     main()
