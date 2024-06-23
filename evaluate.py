@@ -1,7 +1,8 @@
 import yaml
 import pandas as pd
-from src.models.model_factory import get_model_and_tokenizer
-from src.evaluation.evaluator import evaluate_model
+import torch
+from models.model_factory import get_model_and_tokenizer
+from evaluation.evaluator import evaluate_model
 
 
 def main():
@@ -14,11 +15,11 @@ def main():
 
     for model_config in config['models']:
         model, tokenizer = get_model_and_tokenizer(
-            model_config['name'],
-            model_config['type'],
+            model_config,
             config['training']['num_labels']
         )
         model.load_state_dict(torch.load(f"./model_{model_config['name']}/pytorch_model.bin"))
+        model.to(model.device)
 
         evaluation_results = evaluate_model(model, tokenizer, test_df, config)
         results.append({
@@ -29,6 +30,9 @@ def main():
     for result in results:
         print(f"Model: {result['model']}")
         print(f"Accuracy: {result['accuracy']:.4f}")
+        print(f"Precision: {result['precision']:.4f}")
+        print(f"Recall: {result['recall']:.4f}")
+        print(f"F1 Score: {result['f1_score']:.4f}")
         print(f"Average Inference Time: {result['avg_inference_time']:.4f} seconds")
         print()
 

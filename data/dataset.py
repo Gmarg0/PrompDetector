@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-class TwitterDataset(Dataset):
+class TextClassificationDataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_length=128):
         self.labels = dataframe['label'].tolist()
         self.texts = [
@@ -30,7 +30,7 @@ class TwitterDataset(Dataset):
 
 def load_data(config):
     df = pd.read_csv(config['data']['train_path'])
-    df = df[['tweet', 'class']].rename(columns={'tweet': 'text', 'class': 'label'})
+    df = df[['text', 'label']]
     train_df, test_df = train_test_split(
         df,
         test_size=config['data']['test_size'],

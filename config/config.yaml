@@ -7,10 +7,16 @@ data:
 models:
   - name: 'bert-base-uncased'
     type: 'bert'
+    tokenizer: 'BertTokenizer'
+    model: 'BertForSequenceClassification'
   - name: 'roberta-base'
     type: 'roberta'
+    tokenizer: 'RobertaTokenizer'
+    model: 'RobertaForSequenceClassification'
   - name: 'distilbert-base-uncased'
     type: 'distilbert'
+    tokenizer: 'DistilBertTokenizer'
+    model: 'DistilBertForSequenceClassification'
 
 training:
   max_length: 128

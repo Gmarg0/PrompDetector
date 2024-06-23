@@ -1,7 +1,7 @@
 import yaml
-from src.data.dataset import load_data
-from src.models.model_factory import get_model_and_tokenizer
-from src.training.trainer import train_model
+from data.dataset import load_data
+from models.model_factory import get_model_and_tokenizer
+from training.trainer import train_model
 from sklearn.model_selection import train_test_split
 
 def main():
@@ -13,8 +13,7 @@ def main():
 
     for model_config in config['models']:
         model, tokenizer = get_model_and_tokenizer(
-            model_config['name'],
-            model_config['type'],
+            model_config,
             config['training']['num_labels']
         )
         train_model(model, tokenizer, train_df, eval_df, config)
